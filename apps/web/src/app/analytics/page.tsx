@@ -1,0 +1,8 @@
+'use client'
+
+import { Shell } from '@/components/shell/shell'
+import { ModuleWorkspace } from '@/components/modules/module-workspace'
+
+export default function AnalyticsPage() {
+  return <Shell><ModuleWorkspace module="analytics" /></Shell>
+}

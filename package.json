@@ -1,0 +1,33 @@
+{
+  "name": "content-automation-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Content Automation Platform — modular monolith SaaS",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:api": "cd apps/api && npx ts-node -r dotenv/config -r tsconfig-paths/register.js -r reflect-metadata src/main.ts",
+    "dev:web": "cd apps/web && npm run dev",
+    "build": "cd apps/web && npm run build",
+    "test": "npx jest --config jest.config.js --runInBand",
+    "lint": "cd apps/api && npx eslint src --config eslint.config.js",
+    "typecheck": "cd apps/api && npx tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/supertest": "^7.2.1",
+    "concurrently": "^9.1.0",
+    "jest": "^30.4.2",
+    "playwright": "^1.62.1",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.12",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0"
+  },
+  "dependencies": {
+    "@nestjs/jwt": "^11.0.2",
+    "@nestjs/passport": "^11.0.5",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1"
+  }
+}

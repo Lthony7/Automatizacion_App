@@ -1,0 +1,51 @@
+# Local configuration and generated files
+.env
+.env.*
+!.env.example
+apps/api/.env
+apps/web/.env.local
+
+# Node
+node_modules/
+**/node_modules/
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+coverage/
+logs/
+*.tsbuildinfo
+
+# Turbopack / cache
+.turbo/
+.turbopack/
+
+# TypeScript
+tsconfig.tsbuildinfo
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temp
+tmp/
+temp/
+
+# Log files
+*.log
+*-log.txt
+*-out.txt
+*-err.txt
+build-log.txt
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Business documents (not part of the codebase)
+Requerimiento_*.docx

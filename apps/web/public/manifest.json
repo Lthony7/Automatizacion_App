@@ -1,0 +1,55 @@
+{
+  "name": "BibleShorts",
+  "short_name": "BibleShorts",
+  "description": "Plataforma de Automatización de Contenido Cristiano",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a5f7a",
+  "orientation": "portrait",
+  "categories": ["productivity", "education", "lifestyle"],
+  "icons": [
+    {
+      "src": "/brand/pwa-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/brand/pwa-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/brand/Logo_Bible.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/",
+      "description": "Ver panel de control"
+    },
+    {
+      "name": "Generar contenido",
+      "url": "/content",
+      "description": "Crear nuevo contenido"
+    },
+    {
+      "name": "Revisar",
+      "url": "/review",
+      "description": "Revisar contenido pendiente"
+    },
+    {
+      "name": "Calendario",
+      "url": "/calendar",
+      "description": "Ver calendario"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

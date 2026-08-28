@@ -1,0 +1,171 @@
+/**
+ * Prisma Schema - Content Automation Platform FASE 2
+ * Authentication, Authorization, Tenants, Users, Projects, API Keys
+ * Models only - database connection handled via prisma.config.ts
+ */
+
+generator client {
+  provider = "postgresql"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Tenant {
+  id        String   @id @default(uuid())
+  name      String
+  plan      String // free, pro, enterprise
+  status    String // active, suspended, deleted
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects    Project[]
+  users       User[]
+  apiKeys     ApiKey[]
+  roles       Role[]
+  permissions Permission[]
+  contents    Content[]
+  campaigns   Campaign[]
+}
+
+model User {
+  id            String     @id @default(uuid())
+  email         String     @unique
+  passwordHash  String // bcrypt/argon2 hash, never plain text
+  name          String?
+  tenant        Tenant     @relation(fields: [tenantId], references: [id])
+  tenantId      String
+  role          Role       @relation(fields: [roleId], references: [id])
+  roleId        String
+  status        String // active, inactive, suspended
+  emailVerified Boolean    @default(false)
+  lastLoginAt   DateTime?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  userRoles     UserRole[]
+  projects      Project[]
+  contents      Content[]
+}
+
+model Role {
+  id          String       @id @default(uuid())
+  name        String // OWNER, ADMIN, EDITOR, REVIEWER, VIEWER
+  description String?
+  tenant      Tenant       @relation(fields: [tenantId], references: [id])
+  tenantId    String
+  permissions Permission[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  users       User[]
+  userRoles   UserRole[]
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  code        String // e.g., "content:create", "content:approve", "project:manage"
+  name        String // human-readable name
+  description String?
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  role        Role?    @relation(fields: [roleId], references: [id])
+  roleId      String?
+  apiKey      ApiKey?  @relation(fields: [apiKeyId], references: [id])
+  apiKeyId    String?
+}
+
+model UserRole {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  role   Role   @relation(fields: [roleId], references: [id])
+  roleId String
+
+  @@unique([userId, roleId])
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  vertical    String? // christian, automotive, fitness, null for generic
+  status      String // active, archived
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId    String
+  owner       User     @relation(fields: [ownerId], references: [id])
+  ownerId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  content Content[]
+  campaigns Campaign[]
+}
+
+model ApiKey {
+  id            String       @id @default(uuid())
+  hash          String // bcrypt/argon2 hash, NEVER plain text - stored only
+  prefix        String // for identification/logging (e.g., "sk_")
+  permissions   Permission[] // granted permissions (denormalized for fast checks)
+  tenant        Tenant       @relation(fields: [tenantId], references: [id])
+  tenantId      String
+  status        String // active, revoked, expired
+  lastUsedAt    DateTime?
+  revokedAt     DateTime?
+  createdAt     DateTime     @default(now())
+  lastRotatedAt DateTime?
+}
+
+model Content {
+  id            String    @id @default(uuid())
+  hook          String?
+  title         String
+  script        String?
+  description   String?
+  cta           String?
+  hashtags      String[]  @default([])
+  references    Json?
+  contentType   String // prayer, verse, reflection, story, etc.
+  status        String // draft, queued, generated, validated, approved, scheduled, publishing, published, failed, cancelled
+  vertical      String? // christian, automotive, null for generic
+  tenant        Tenant    @relation(fields: [tenantId], references: [id])
+  tenantId      String
+  project       Project?  @relation(fields: [projectId], references: [id])
+  projectId     String?
+  campaign      Campaign? @relation(fields: [campaignId], references: [id])
+  campaignId    String?
+  user          User?     @relation(fields: [userId], references: [id])
+  userId        String?
+  aiProvider    String? // gemini, openai, groq, null for manual
+  aiModel       String?
+  costAi        Float     @default(0)
+  costTts       Float     @default(0)
+  costRendering Float     @default(0)
+  metadata      Json?
+  publishedAt   DateTime?
+  publishedOn   String? // youtube, instagram, facebook, null
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Campaign {
+  id                      String    @id @default(uuid())
+  name                    String
+  status                  String    @default("DRAFT")
+  domain                  String?
+  dailyTargetOverride     Int?
+  contentTypeDistribution Json?
+  startsAt                DateTime?
+  endsAt                  DateTime?
+  metadata                Json?
+  tenant                  Tenant    @relation(fields: [tenantId], references: [id])
+  tenantId                String
+  project                 Project?  @relation(fields: [projectId], references: [id])
+  projectId               String?
+  contents                Content[]
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  @@index([tenantId, projectId, domain, status])
+}

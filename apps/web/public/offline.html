@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BibleShorts - Offline</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a5f7a 0%, #2d8fa3 100%);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    .container { max-width: 400px; }
+    .logo { margin-bottom: 20px; }
+    .logo img { width: 96px; height: 96px; object-fit: contain; }
+    h1 { font-size: 28px; margin-bottom: 12px; }
+    p { opacity: 0.9; line-height: 1.6; margin-bottom: 24px; }
+    button {
+      background: white;
+      color: #1a5f7a;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { background: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo"><img src="/brand/logo-icon.png" alt="BibleShorts" /></div>
+    <h1>BibleShorts</h1>
+    <p>No tienes conexión a internet en este momento. Algunas funciones pueden no estar disponibles.</p>
+    <button onclick="window.location.reload()">Reintentar</button>
+  </div>
+</body>
+</html>

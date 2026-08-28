@@ -1,0 +1,49 @@
+/*
+ * TypeScript Configuration - Content Automation Platform Root
+ * FASE 1 & FASE 2 Foundation Structure
+ * strict mode as per architectural requirements
+*/
+
+{
+  "compilerOptions": {
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    "target": "es2021",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "rootDir": ".",
+    "outDir": "./dist",
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "apps/*": ["apps/*"],
+      "packages/*": ["packages/*"],
+      "@/*": ["apps/api/src/*"],
+      "@core/*": ["apps/api/src/core/*"],
+      "@modules/*": ["apps/api/src/modules/*"],
+      "@infra/*": ["apps/api/src/infra/*"],
+    },
+
+    "resolveJsonModule": true,
+
+    "sourceMap": true,
+
+    "lib": ["es2021", "dom", "dom.iterable"],
+
+    "types": ["node"],
+
+    "skipLibCheck": true,
+  },
+  "include": ["apps", "packages"],
+  "exclude": ["node_modules", "dist", ".next"]
+}

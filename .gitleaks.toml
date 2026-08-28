@@ -1,0 +1,33 @@
+# Gitleaks configuration — Content Automation Platform
+# Excludes test fixtures, generated files, and known safe patterns.
+
+[allowlist]
+  description = "Global allowlist"
+  paths = [
+    '''test/.*\.ts$''',          # test files contain dummy secrets
+    '''.*\.spec\.ts$''',
+    '''.*\.e2e-test\.ts$''',
+    '''jest\.config\.js$''',     # CI test env values
+    '''.*\.test\.ts$''',
+    '''apps/web/out/.*''',       # build output
+    '''node_modules/.*''',
+    '''\.next/.*''',
+    '''dist/.*''',
+  ]
+  regexes = [
+    '''(?i)ci-test-secret''',               # CI dummy values
+    '''(?i)placeholder''',                   # placeholder values
+    '''sk_[A-Za-z0-9]{20,}''',              # API key test fixtures (sk_ prefix)
+  ]
+
+[[rules]]
+  id = "hardcoded-secret"
+  description = "Hardcoded secret in source"
+  regex = '''(?i)(password|secret|token|api[_-]?key)\s*[:=]\s*['\"][^'\"]{16,}['\"]'''
+  tags = ["secret", "credential"]
+
+[[rules]]
+  id = "private-key"
+  description = "Private key file"
+  regex = '''-----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----'''
+  tags = ["key", "credential"]

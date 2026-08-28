@@ -1,0 +1,81 @@
+# CI Pipeline — Content Automation Platform
+# FASE 27: Build / Lint / Typecheck / Test + Secret Scanning
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Secret scanning (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            apps/api/package-lock.json
+            apps/web/package-lock.json
+
+      - name: Install root deps
+        run: npm ci
+
+      - name: Install API deps
+        run: npm ci
+        working-directory: apps/api
+
+      - name: Install Web deps
+        run: npm ci
+        working-directory: apps/web
+
+      - name: Typecheck API
+        run: npx tsc --noEmit -p tsconfig.json
+        working-directory: apps/api
+
+      - name: Lint API (flat config)
+        run: npx eslint src --config eslint.config.js
+        working-directory: apps/api
+
+      - name: Lint Web
+        run: npx eslint --config eslint.config.mjs src
+        working-directory: apps/web
+
+      - name: Tests (E2E)
+        run: npx jest --config ../../jest.config.js --runInBand
+        working-directory: apps/api
+        env:
+          JWT_SECRET: ci-test-secret-at-least-32-chars-long-ok
+          JWT_REFRESH_SECRET: ci-test-refresh-secret-32-chars-long-ok
+          JWT_ACCESS_SECRET: ci-test-secret-at-least-32-chars-long-ok
+          NODE_ENV: test
+
+      - name: Build Web
+        run: npm run build
+        working-directory: apps/web

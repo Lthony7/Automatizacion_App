@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Merriweather', Georgia, serif;
+
+    /* Default brand tokens (BibleShorts) — overridden at runtime by applyBrandToCSS */
+    /* Identity: violeta BibleShorts */
+    --color-primary: 124 83 23;
+    --color-secondary: 165 111 32;
+    --color-accent: 166 101 17;
+    --color-background: 251 247 237;
+    --color-surface: 255 250 240;
+    --color-surface-secondary: 249 239 216;
+    --color-card: 255 253 248;
+    --color-muted: 241 227 193;
+    --color-text-primary: 52 35 14;
+    --color-text-secondary: 112 93 62;
+    --color-border: 231 210 161;
+    --color-success: 8 122 85;
+    --color-warning: 143 85 0;
+    --color-error: 180 35 24;
+    --color-info: 35 102 164;
+
+    /* Sidebar tokens — light theme (white) */
+    --color-sidebar: 247 233 200;
+    --color-sidebar-hover: 239 214 160;
+    --color-sidebar-text: 74 50 18;
+    --color-sidebar-border: 226 192 116;
+  }
+
+  .dark {
+    --color-primary: 230 190 105 !important;
+    --color-secondary: 243 210 137 !important;
+    --color-accent: 249 215 142 !important;
+    --color-background: 34 28 17 !important;
+    --color-surface: 47 38 23 !important;
+    --color-surface-secondary: 61 49 28 !important;
+    --color-card: 47 38 23 !important;
+    --color-muted: 78 63 35 !important;
+    --color-text-primary: 255 247 226 !important;
+    --color-text-secondary: 211 193 153 !important;
+    --color-border: 89 71 39 !important;
+    --color-success: 91 209 155 !important;
+    --color-warning: 249 192 72 !important;
+    --color-error: 255 139 128 !important;
+    --color-info: 130 190 246 !important;
+    --color-sidebar: 41 33 19 !important;
+    --color-sidebar-hover: 65 51 26 !important;
+    --color-sidebar-text: 250 235 198 !important;
+    --color-sidebar-border: 89 71 39 !important;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    color-scheme: light;
+    /* Prevent pinch-to-zoom / scroll zoom */
+    touch-action: manipulation;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: rgb(var(--color-background));
+    color: rgb(var(--color-text-primary));
+    /* Prevent unwanted scroll behavior */
+    overscroll-behavior: none;
+  }
+
+  .dashboard-canvas {
+    background: radial-gradient(circle at top right, rgb(var(--color-primary) / 0.09), transparent 34%), rgb(var(--color-background));
+  }
+
+  * {
+    border-color: rgb(var(--color-border));
+  }
+
+  input, select, textarea {
+    background-color: rgb(var(--color-surface));
+    color: rgb(var(--color-text-primary));
+  }
+}
+
+@layer components {
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+}
